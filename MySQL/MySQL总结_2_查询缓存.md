@@ -14,7 +14,7 @@
 
 **query_cache_size:**为缓存查询结果分配的总内存。
 
-**query_cache_type**:默认为on，可以缓存除了以select sql_no_cache开头的所有查询结果。
+**query_cache_type**:默认为off，可以缓存除了以select sql_no_cache开头的所有查询结果。
 
 **query_cache_wlock_invalidate**:如果该表被锁住，是否返回缓存中的数据，默认是关闭的。
 
@@ -35,4 +35,6 @@ MySQL的查询缓存的实质就是缓存SQL的hash值和SQL的查询结果，�
 ```
 我们都知道hash值的规则，就算很小的查询，哈希出来的结果差距是很多的，所以select * from 表名 where name=“张三”和SELECT * FROM 表名 WHERE NAME=“张三”和select * from 表名 where name = “张三”，三个SQL哈希出来的值是不一样的，大小写和空格影响了他们，所以并不能命中缓存，但其实他们搜索结果是完全一样的。
 ```
+
+
 

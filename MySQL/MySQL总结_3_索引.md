@@ -31,7 +31,17 @@
 
 **聚簇索引默认是主键**。如果表中没有定义主键，InnoDB会选择一个**唯一且非空索引**替代。如果没有这样的索引，InnoDB会**隐式的定义一个主键**来作为聚簇索引。InnoDB值聚集在同一个页面中的记录，对行记录进行**索引排序**，实现索引结构。**如果你已经设置了主键作为聚簇索引，想要添加新的聚簇索引，必须先删除主键，然后添加我们想要的聚簇索引，最后恢复设置主键即可。**
 
+此时其他索引只能被定义为非聚簇索引。这个是最大的误区。有的主键还是无意义的自动增量字段，那样的话Clustered index对效率的帮助，完全被浪费了。
+
+刚才说到了，聚簇索引性能最好而且具有唯一性，所以非常珍贵，必须慎重设置。**一般要根据这个表最常用的SQL查询方式来进行选择，某个字段作为聚簇索引，或组合聚簇索引**，这个要看实际情况。
+
+ 记住我们的**最终目的**就是**在相同结果集情况下，尽可能减少逻辑IO**。 
+
+## 结合图再仔细点看
+
+![](https://upload-images.jianshu.io/upload_images/10154499-5244179cc19a1c21.PNG?imageMogr2/auto-orient/strip|imageView2/2/w/164/format/webp)
 
 
 
+![InnoDB和MyISAM对索引的检索过程](https://upload-images.jianshu.io/upload_images/10154499-5772dddedb909374.PNG?imageMogr2/auto-orient/strip|imageView2/2/w/633/format/webp)
 

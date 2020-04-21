@@ -5,9 +5,19 @@ Ubuntu本身自带的apt-ge数据源是国外的，使用起来很慢，最好�
 ## 更换apt-get数据源
 
 1. 输入：sudo -s切换为root超级管理员；
-2. 执行命令：vim /etc/apt/sources.list；
-3. 使用命令：%d 清空所有内容；
-4. 阿里数据源地址：
+
+2. 备份sources.list 
+
+   ```
+   cd /etc/apt
+   sudo cp sources.list sources.list.bak
+   ```
+
+3. 执行命令：vim /etc/apt/sources.list；
+
+4. 使用命令：%d 清空所有内容；
+
+5. 阿里数据源地址：
 
 ```
 https://developer.aliyun.com/mirror/ubuntu

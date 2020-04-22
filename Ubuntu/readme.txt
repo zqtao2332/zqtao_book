@@ -23,7 +23,7 @@ Ubuntu操作日志
 2、安装vim
 3、更换国内apt源
 4、安装pip3
-5、
+5、pip3更换国内源
 
 pip3 install numpy
 sudo apt install cmake

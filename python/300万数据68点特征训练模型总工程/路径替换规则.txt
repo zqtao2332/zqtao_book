@@ -1,0 +1,7 @@
+3w 张人脸训练
+
+
+增加前缀
+file='
+
+file='/home/tao/app/data/train3w/

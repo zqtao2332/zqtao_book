@@ -1,0 +1,21 @@
+testimg：测试图片存放目录
+trainimg：训练图片存放目录
+image_metadata_stylesheet.xsl：xml格式约束文件
+training_with_face_landmarks.xml：训练标记图片xml
+testing_with_face_landmarks.xml：测试标记图片xml
+predictor.dat：执行完训练后产生的68人脸特征模型，可以识别人脸的68个特征点。
+
+
+运行训练文件
+python3 tao_train_shape_predictor_22.py
+运行测试文件
+python3 tao_test_shape_predictor_22.py
+
+
+
+其中涉及的文件目录
+/home/tao/app/data/persontrain
+
+所有东西需要放进persontrain文件
+训练标记xml 和测试标记xml 文件中保存的文件地址都是绝对路径，
+若更换其他文件夹下运行（目录不和我的一样）需要自行修改

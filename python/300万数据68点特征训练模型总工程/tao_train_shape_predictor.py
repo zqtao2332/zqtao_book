@@ -1,8 +1,4 @@
 # coding: utf-8
-# 
-#   This example program shows how to use dlib's implementation of the paper:
-#   One Millisecond Face Alignment with an Ensemble of Regression Trees by
-#   Vahid Kazemi and Josephine Sullivan, CVPR 2014
 
 import os
 import cv2
@@ -14,8 +10,11 @@ current_path = os.getcwd()
 # 训练部分
 # 参数设置
 options = dlib.shape_predictor_training_options()
+# 采样训练:300
 options.oversampling_amount = 300
+# 显式地增加正则化(使nu变小)和使用深度更小的树来降低模型的容量
 options.nu = 0.05
+# 训练树深:2
 options.tree_depth = 2
 options.be_verbose = True
 

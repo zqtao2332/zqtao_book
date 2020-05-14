@@ -1,0 +1,220 @@
+
+大学生春季运动会的数据库，保存了比赛信息的三个表如下：
+运动员 sporter（运动员编号 sporterid，姓名name，性别 sex，所属系号 department）
+
+项目 item（项目编号 itemid，名称 itemname，比赛地点 location）
+
+成绩 grade（运动员编号 id，项目编号 itemid，积分 mark）
+
+用SQL语句完成在“体育馆”进行比赛的各项目名称及其冠军的姓名
+
+
+select itemname, name
+from sporter, item, grade
+
+
+
+// 首先找到在体育馆中进行的项目的项目编号
+select 
+	itemid iid 
+from 
+	item
+where
+	location='体育馆';
+
+
+// 根据项目编号将成绩进行分组，找到各个项目的最大值
+select 
+	itemid, max(mark)
+from
+	grade
+where
+	itemid in( // 限制地点在体育馆的项目
+		select 
+			itemid iid 
+		from 
+			item
+		where
+			location='体育馆';
+	) 
+group by
+	itemid
+
+// 串联条件，找到项目名称及其冠军的姓名
+SELECT
+	i.itemname,
+	s.NAME 
+FROM
+	grade g,
+	(
+SELECT
+	itemid iid,
+	MAX( mark ) max 
+FROM
+	grade 
+WHERE
+	itemid IN ( SELECT itemid FROM item WHERE location = '体育馆' ) 
+GROUP BY
+	itemid 
+	) temp,
+	item i,
+	sporter s 
+WHERE
+	g.itemid = temp.iid 
+	AND g.mark = temp.max 
+	AND temp.iid = i.itemid 
+	AND s.sporterid = g.sporterid;
+
+
+=====================================================================
+
+比赛结果result表内容如下：
+Date                     Win
+2017-07-12               胜 
+2017-07-12               负 
+2017-07-15               胜 
+2017-07-15               负
+如果要生成下列结果, 正确的sql语句是：（      ）
+比赛日期            胜     负
+2017-07-12          1      1
+2017-07-15          1      1
+
+SELECT
+	Date AS 比赛日期, SUM(case when Win='胜' then 1 else 0 end) AS 胜, SUM(case when Win='负' then 1 else 0 end) AS 负
+from 
+	result 
+group by 
+	Date
+
+=====================================================================
+
+请取出 BORROW表中日期(RDATE字段)为当天的所有记录？(RDATE字段为datetime型，包含日期与时间)。
+
+
+理解datediff（dd,RDDATE,getdate()）==0含义，即返回以日为单位（dd），和当前日期（getdate）相差为0日的RDDATE。 
+这里用这个函数的意义在于，RDDATE包括日期和时间，这里因为有时间，和getdate不能直接比较，所以用datediff转换为范围。 
+
+DATEDIFF() 函数返回两个日期之间的时间。 
+语法 
+DATEDIFF(datepart,startdate,enddate)
+startdate 和 enddate 参数是合法的日期表达式。 
+datepart 参数可以是下列的值： 
+	年 yy,yyyy
+	月 mm, m
+	日 dd, d
+	...
+
+
+select * from BORROW 
+where 
+	datediff(dd,RDATE,getdate())=0
+=====================================================================
+
+积分result表中有A B C D四列，要求：
+1）当A列值大于等于B列时，选择A列否则选择B列
+2）当C列值大于等于D列时，选择C列否则选择D列
+
+
+SELECT
+	 (case when A>=B then A else B) max_ab, (case when C>=D then C else D) 
+FROM
+	result
+
+=====================================================================
+
+若要“查询选修了3门以上课程的学生的学号”
+
+SELECT
+	 id 
+FROM 
+	student 
+GROUP BY 
+	id 
+HAVING COUNT(*)> 3
+
+=====================================================================
+
+
+快件信息表（waybillinfo）中存储了快件的所有操作信息，
+请找出在中山公园网点，异常派送（optype='异常派件'）次数超过3次的快件(waybillno)
+
+
+select waybillno from waybillinfo where zonecode='中山公园' and optype='异常派件'
+group by waybillno having count(*) > 3
+=====================================================================
+
+查询显示雇员的姓名和姓名中是否含有字母A的信息，满足如下条件
+如果字符A在姓名的首位，则显示'字符A在首位'
+如果字符A在姓名的末位，则显示'字符A在末位'
+如果字符A在姓名中不存在，则显示'没有字符A'
+其他情况显示'字符A在中间'
+
+
+select ename, case  charindex(‘A‘,ename)
+when 1 then ‘字符A在首位‘
+when len(ename) then
+‘字符A在末位‘
+when 0 then ‘没有字符A‘
+else ‘字符A在中间‘
+end 名称类别   from emp;
+
+=====================================================================
+
+
+运动会比赛信息的数据库，有如下三个表： 
+运动员ATHLETE（运动员编号 Ano，姓名Aname，性别Asex，所属系名 Adep）， 项目 ITEM （项目编号Ino，名称Iname，比赛地点Ilocation）， 成绩SCORE （运动员编号Ano，项目编号Ino，积分Score）。
+写出目前总积分最高的系名及其积分
+
+SELECT Adep,SUM(Score)FROM ATHLETE,SCORE  WHERE ATHLETE.Ano=SCORE.Ano GROUP BY Adep  HAVING SUM(Score)>=ALL
+
+(SELECT SUM(Score) FROM ATHLETE,SCORE  WHERE ATHLETE.Ano=SCORE.Ano GROUP BY Adep)
+
+=====================================================================
+
+
+雇员表EMP 结构如下
+(  雇员编号 EMPNO ,   姓名 ENAME ,
+工作岗位 JOB ,  管理员编号 MGR ,
+受雇时间 HIREDATE ,  工资 SAL ,
+奖金 COMM ,  部门编号 DEPTNO );
+
+
+显示在10和30部门工作并且工资大于5500元的雇员的姓名和工资，列标题显示为Employee和Monthly Salary 语句
+
+select 
+	ENAME as Employee, SAL as Salary
+from
+	EMP
+WHERE 
+	DEPTNO IN(10,30) AND SAL>5500;
+=====================================================================
+
+
+
+=====================================================================
+
+
+
+
+=====================================================================
+
+
+
+
+=====================================================================
+
+
+
+=====================================================================
+
+
+
+=====================================================================
+
+
+
+=====================================================================
+
+
+
+=====================================================================
